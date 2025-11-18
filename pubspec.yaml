@@ -1,0 +1,44 @@
+name: luxeloft
+description: LuxeLoft description.
+
+publish_to: "none"
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=3.2.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.2
+  flutter_svg: ^2.0.10+1
+  firebase_auth: ^6.1.2
+  firebase_core: ^4.2.1
+  google_fonts: ^6.3.2
+  provider: ^6.1.5+1
+  carousel_slider: ^5.0.0
+  cached_network_image: ^3.4.1
+  cloud_firestore: ^6.1.0
+  shared_preferences: ^2.5.3
+  crypto: ^3.0.7
+  google_sign_in: ^6.2.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^4.0.0
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/images/
+    - assets/icons/
+    - assets/Illustration/
+    - assets/flags/
+    - assets/logo/
+
+

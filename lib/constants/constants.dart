@@ -1,0 +1,48 @@
+import 'package:flutter/material.dart';
+
+const Color primaryColor = Color(0xFF1A9EB7);
+
+const MaterialColor primaryMaterialColor =
+    MaterialColor(0xFF9581FF, <int, Color>{
+  50: Color(0xFFEAFBFF),
+  100: Color(0xFFD0F8FF),
+  200: Color(0xFFB1F2FF),
+  300: Color(0xFF90EDFF),
+  400: Color(0xFF78E7FD),
+  500: Color(0xFF1A9EB7),
+  600: Color(0xFF44E0FD),
+  700: Color(0xFF49E1FF),
+  800: Color(0xFF44E1FF),
+  900: Color(0xFF5BCBE5),
+});
+
+const Color blackColor = Color(0xFF16161E);
+const Color blackColor80 = Color(0xFF45454B);
+const Color blackColor60 = Color(0xFF737378);
+const Color blackColor40 = Color(0xFFA2A2A5);
+const Color blackColor20 = Color(0xFFD0D0D2);
+const Color blackColor10 = Color(0xFFE8E8E9);
+const Color blackColor5 = Color(0xFFF3F3F4);
+
+const Color whiteColor = Colors.white;
+const Color whileColor80 = Color(0xFFCCCCCC);
+const Color whileColor60 = Color(0xFF999999);
+const Color whileColor40 = Color(0xFF666666);
+const Color whileColor20 = Color(0xFF333333);
+const Color whileColor10 = Color(0xFF191919);
+const Color whileColor5 = Color(0xFF0D0D0D);
+
+const Color greyColor = Color(0xFFB8B5C3);
+const Color lightGreyColor = Color(0xFFF8F8F9);
+const Color darkGreyColor = Color(0xFF1C1C25);
+
+
+const Color purpleColor = Color(0xFF1A9EB7);
+const Color successColor = Color(0xFF2ED573);
+const Color warningColor = Color(0xFFFFBE21);
+const Color errorColor = Color(0xFFEA5B5B);
+
+const double defaultBorderRadious = 12.0;
+const Duration defaultDuration = Duration(milliseconds: 300);
+
+
