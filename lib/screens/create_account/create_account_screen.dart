@@ -1,12 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:luxeloft/screens/login/login_screen.dart';
+import 'package:luxeloft/services/auth_service.dart';
+import 'package:provider/provider.dart';
 
 class CreateAccountScreen extends StatelessWidget {
   const CreateAccountScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final auth = Provider.of<AuthService>(context);
+    final phoneController = TextEditingController();
+    final emailController = TextEditingController();
+    final passwordController = TextEditingController();
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -68,6 +75,7 @@ class CreateAccountScreen extends StatelessWidget {
 
                     /// Email Field
                     _buildInputField(
+                      controller: emailController,
                       hint: "Email",
                       icon: Icons.email_outlined,
                       obscure: false,
@@ -77,6 +85,7 @@ class CreateAccountScreen extends StatelessWidget {
 
                     /// Password with special characters
                     _buildInputField(
+                      controller: passwordController,
                       hint: "Special Characters",
                       icon: Icons.lock_outline,
                       obscure: true,
@@ -86,6 +95,7 @@ class CreateAccountScreen extends StatelessWidget {
 
                     /// Repeat Password
                     _buildInputField(
+                      controller: passwordController,
                       hint: "Repeat Password",
                       icon: Icons.lock_outline,
                       obscure: true,
@@ -93,10 +103,9 @@ class CreateAccountScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 16),
                     TextField(
-                      // controller: phoneController,
+                      controller: phoneController,
                       keyboardType: TextInputType.phone,
                       maxLength: 10,
-
                       decoration: InputDecoration(
                         fillColor: Colors.white,
                         hintText: 'Phone Number',
@@ -140,7 +149,27 @@ class CreateAccountScreen extends StatelessWidget {
                       width: double.infinity,
                       height: 60,
                       child: ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () async {
+                          final String? exists = await auth.signUp(
+                              phone: phoneController.text.toString(),
+                              email: emailController.text.toString(),
+                              password: passwordController.toString());
+                          if (exists == null) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                    content:
+                                        Text("Account Created Successfully")));
+                            Navigator.pushAndRemoveUntil(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (_) => LoginScreen()),
+                                (route) => false);
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                    content: Text("Account Already Exists")));
+                          }
+                        },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFF1CA6C0),
                           shape: RoundedRectangleBorder(
@@ -178,7 +207,14 @@ class CreateAccountScreen extends StatelessWidget {
                         spacing: 5,
                         children: [
                           SvgPicture.asset('assets/icons/Apple Button.svg'),
-                          SvgPicture.asset('assets/icons/Google Button.svg'),
+                          InkWell(onTap: () async {
+                            try {
+                              await auth.signInWithGoogle();
+                            } catch (e) {
+                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString())));
+                            }
+
+                          },child: SvgPicture.asset('assets/icons/Google Button.svg')),
                           SvgPicture.asset('assets/icons/Facebook Button.svg'),
                         ],
                       ),
@@ -198,6 +234,7 @@ class CreateAccountScreen extends StatelessWidget {
   /// REUSABLE INPUT FIELD WIDGET
   /// -----------------------------------------
   Widget _buildInputField({
+    required TextEditingController controller,
     required String hint,
     required IconData icon,
     required bool obscure,
@@ -209,6 +246,7 @@ class CreateAccountScreen extends StatelessWidget {
         borderRadius: BorderRadius.circular(14),
       ),
       child: TextField(
+        controller: controller,
         obscureText: obscure,
         decoration: InputDecoration(
           fillColor: Colors.white,

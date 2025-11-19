@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:luxeloft/services/auth_service.dart';
 import 'package:provider/provider.dart';
 
 import '../../providers/user_navigation_provider.dart';
@@ -19,7 +20,10 @@ class NavScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final auth = Provider.of<AuthService>(context, listen: false);
+    // final user = auth.currentUser;
     return Scaffold(
+
       backgroundColor: Colors.white,
       drawer: const MyDrawer(),
       appBar: AppBar(
@@ -38,7 +42,9 @@ class NavScreen extends StatelessWidget {
             icon: SvgPicture.asset('assets/icons/search.svg'),
           ),
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              auth.signOut();
+            },
             icon: SvgPicture.asset('assets/icons/scan.svg'),
           ),
         ],

@@ -1,11 +1,13 @@
 import 'dart:developer';
 
+
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
-import '../../services/auth_provider.dart';
+import '../../services/auth_service.dart';
+
 
 class OtpScreen extends StatelessWidget {
   OtpScreen({super.key});
@@ -14,7 +16,7 @@ class OtpScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final auth = Provider.of<AuthProvider>(context);
+    final auth = Provider.of<AuthService>(context);
     return Scaffold(
       appBar: AppBar(
         // leading: SvgPicture.asset("assets/icons/leading_back.svg"),
@@ -104,15 +106,18 @@ class OtpScreen extends StatelessWidget {
                         onPressed: () async {
                           if (otpCtrl.text.isNotEmpty) {
                             try {
-                              final msg =
+                              final String? msg =
                                   await auth.verifyOTP(otpCtrl.text.trim());
+
+                              // ScaffoldMessenger.of(context)
+                              //     .showSnackBar(SnackBar(content: Text(msg as String)));
 
                               if (msg != null) {
                                 ScaffoldMessenger.of(context)
                                     .showSnackBar(SnackBar(content: Text(msg)));
                               } else {
                                 Navigator.pushReplacementNamed(
-                                    context, "/home");
+                                    context, "/AutoScreen");
                               }
                             } catch (e) {
                               log(e.toString());

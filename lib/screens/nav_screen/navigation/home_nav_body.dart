@@ -2,7 +2,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:luxeloft/screens/nav_screen/navigation/user_tabs_and_body.dart';
+import 'package:luxeloft/services/auth_service.dart';
 import 'package:luxeloft/widgets/user_tab_bar.dart';
+import 'package:provider/provider.dart';
 
 import '../../../widgets/image_slider.dart';
 
@@ -11,6 +13,8 @@ class UserHomeScreenBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final auth = Provider.of<AuthService>(context);
+
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
@@ -25,7 +29,7 @@ class UserHomeScreenBody extends StatelessWidget {
                 SizedBox(
                   width: double.infinity,
                   child: Text(
-                    "Hi, Andrea",
+                    "Hi, ${ auth.currentUser?.displayName ??"Andrea"}",
                     style: GoogleFonts.poppins(
                         fontSize: 16, fontWeight: FontWeight.w400),
                   ),

@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:luxeloft/screens/auto_screen.dart';
+import 'package:luxeloft/screens/create_account/create_account_screen.dart';
 import 'package:luxeloft/screens/login/login_screen.dart';
 import 'package:luxeloft/screens/nav_screen/nav_screen.dart';
 import 'package:luxeloft/screens/onboarding/onboarding_screen.dart';
 import 'package:luxeloft/screens/otp/otp_screen.dart';
+import 'package:luxeloft/services/auth_service.dart';
+import 'package:luxeloft/services/auth_service_fire.dart';
 import 'providers/user_navigation_provider.dart';
 import 'theme/app_theme.dart';
 import 'package:provider/provider.dart';
@@ -21,16 +24,14 @@ Future<void> main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => UserNavigationProvider()),
-        // ChangeNotifierProvider(create: (_) => ProviderNavigationProvider()),
+        ChangeNotifierProvider(create: (_)=> AuthService()),
       ],
       child: const MyApp(),
     ),
   );
 }
-
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -38,7 +39,7 @@ class MyApp extends StatelessWidget {
       title: 'LuxeLoft',
       theme: AppTheme.lightTheme(context),
       themeMode: ThemeMode.light,
-      home: const NavScreen(),
+      // home: const NavScreen(),
       initialRoute: '/AutoScreen',
       routes: {
         '/OnboardingScreen': (context) => const OnboardingScreen(),
@@ -46,6 +47,7 @@ class MyApp extends StatelessWidget {
         '/OtpScreen': (context) => OtpScreen(),
         '/NavScreen': (context) => const NavScreen(),
         '/AutoScreen': (context) => const AutoScreen(),
+        '/CreateAccountScreen': (context) => const CreateAccountScreen(),
       },
     );
   }

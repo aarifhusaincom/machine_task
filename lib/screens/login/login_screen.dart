@@ -5,7 +5,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
-import '../../services/auth_provider.dart';
+import '../../services/auth_service.dart';
 
 class LoginScreen extends StatelessWidget {
   LoginScreen({super.key});
@@ -14,7 +14,7 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final auth = Provider.of<AuthProvider>(context);
+    final auth = Provider.of<AuthService>(context);
     return Scaffold(
       body: SafeArea(
         child: SizedBox.expand(
@@ -174,7 +174,14 @@ class LoginScreen extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          SvgPicture.asset('assets/icons/Google Button.svg'),
+                          InkWell(onTap: () async {
+                            try {
+                              await auth.signInWithGoogle();
+                            } catch (e) {
+                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString())));
+                            }
+
+                          },child: SvgPicture.asset('assets/icons/Google Button.svg')),
                           const SizedBox(
                             width: 10,
                           ),
@@ -199,14 +206,19 @@ class LoginScreen extends StatelessWidget {
                             fontWeight: FontWeight.w400,
                             color: const Color(0xFF878787)),
                       ),
-                      Text("SIGN UP",
-                          style: GoogleFonts.poppins(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w600,
-                            color: const Color(0xFF1A9EB7),
-                            decoration: TextDecoration.underline,
-                            decorationColor: const Color(0xFF1A9EB7),
-                          )),
+                      InkWell(
+                        onTap: () {
+                          Navigator.pushNamed(context, '/CreateAccountScreen');
+                        },
+                        child: Text("SIGN UP",
+                            style: GoogleFonts.poppins(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w600,
+                              color: const Color(0xFF1A9EB7),
+                              decoration: TextDecoration.underline,
+                              decorationColor: const Color(0xFF1A9EB7),
+                            )),
+                      ),
                     ],
                   )
                 ],
