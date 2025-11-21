@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../../../models/category_model.dart';
+import '../../../../models/product_model.dart';
+import '../../../../services/firestore_service.dart';
 import '../../../../widgets/button_small.dart';
 
 class RecommendedItems extends StatelessWidget {
@@ -10,6 +13,7 @@ class RecommendedItems extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final FirestoreService _service = FirestoreService();
     return ListView(
       children: [
         const SizedBox(
@@ -30,83 +34,110 @@ class RecommendedItems extends StatelessWidget {
         const SizedBox(
           height: 16,
         ),
-        SizedBox(
-          width: double.infinity,
-          child: Wrap(
-            alignment: WrapAlignment.start,
-            spacing: 16,
-            runSpacing: 16,
-            children: [
-              _itemCard(
-                context,
-                title: "Beauty",
-                index: 1,
-              ),
-              _itemCard(
-                context,
-                title: "Offers",
-                index: 2,
-              ),
-              _itemCard(
-                context,
-                title: "Fashion",
-                index: 3,
-              ),
-              _itemCard(
-                context,
-                title: "Home",
-                index: 4,
-              ),
-              _itemCard(
-                context,
-                title: "Shirt",
-                index: 5,
-              ),
-              _itemCard(
-                context,
-                title: "Bag",
-                index: 6,
-              ),
-              _itemCard(
-                context,
-                title: "Dress",
-                index: 7,
-              ),
-              _itemCard(
-                context,
-                title: "Mobiles",
-                index: 8,
-              ),
-            ],
-          ),
-        ),
+        FutureBuilder<List<CategoryModel>>(
+            future: _service.getCategories(),
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) {
+                return const Center(child: CircularProgressIndicator());
+              }
+
+              final categories = snapshot.data!;
+              return SizedBox(
+                width: double.infinity,
+                child: Wrap(
+                  alignment: WrapAlignment.start,
+                  spacing: 16,
+                  runSpacing: 16,
+                  children: [
+                    ...categories.map((category) {
+                      return _itemCard(context,
+                          title: category.name, imgUrl: category.imageUrl);
+                    }),
+                    // _itemCard(
+                    //   context,
+                    //   title: "Beauty",
+                    //   index: 1,
+                    // ),
+                    // _itemCard(
+                    //   context,
+                    //   title: "Offers",
+                    //   index: 2,
+                    // ),
+                    // _itemCard(
+                    //   context,
+                    //   title: "Fashion",
+                    //   index: 3,
+                    // ),
+                    // _itemCard(
+                    //   context,
+                    //   title: "Home",
+                    //   index: 4,
+                    // ),
+                    // _itemCard(
+                    //   context,
+                    //   title: "Shirt",
+                    //   index: 5,
+                    // ),
+                    // _itemCard(
+                    //   context,
+                    //   title: "Bag",
+                    //   index: 6,
+                    // ),
+                    // _itemCard(
+                    //   context,
+                    //   title: "Dress",
+                    //   index: 7,
+                    // ),
+                    // _itemCard(
+                    //   context,
+                    //   title: "Mobiles",
+                    //   index: 8,
+                    // ),
+                  ],
+                ),
+              );
+            }),
         const SizedBox(
           height: 16,
         ),
-        SizedBox(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              _bigItemCard(
-                context,
-                title: "Multi Kit",
-                index: 1,
-              ),
-              _bigItemCard(
-                context,
-                title: "Lipstick",
-                index: 2,
-              ),
-            ],
-          ),
-        )
+        FutureBuilder<List<ProductModel>>(
+            future: _service.getProducts(),
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) {
+                return const Center(child: CircularProgressIndicator());
+              }
+
+              final products = snapshot.data!;
+
+              return SizedBox(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    ...products.map((product) {
+                      return _bigItemCard(context,
+                          title: product.name, imgUrl: product.imageUrl);
+                    }),
+                    // _bigItemCard(
+                    //   context,
+                    //   title: "Multi Kit",
+                    //   index: 1,
+                    // ),
+                    // _bigItemCard(
+                    //   context,
+                    //   title: "Lipstick",
+                    //   index: 2,
+                    // ),
+                  ],
+                ),
+              );
+            })
       ],
     );
   }
 
   Widget _itemCard(BuildContext context,
-      {String? dp, String? title, int? index}) {
+      {String? imgUrl, String? title, int? index}) {
     final screenSize = MediaQuery.of(context).size;
     final screenWidth = screenSize.width;
     // final screenHeight = screenSize.height;
@@ -125,19 +156,29 @@ class RecommendedItems extends StatelessWidget {
           spacing: 10,
           children: [
             Container(
-              clipBehavior: Clip.hardEdge,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(5),
-                // border: Border.all(
-                //   color: const Color(0xFFFFF4DB),
-                //   width: 1,
-                // )
-                //
-              ),
-              height: 48,
-              width: 48,
-              child: Image.asset('assets/images/$index.png'),
-            ),
+                clipBehavior: Clip.hardEdge,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(5),
+                  // border: Border.all(
+                  //   color: const Color(0xFFFFF4DB),
+                  //   width: 1,
+                  // )
+                  //
+                ),
+                height: 48,
+                width: 48,
+                child: CachedNetworkImage(
+                  imageUrl: imgUrl!,
+                  fit: BoxFit.cover,
+                  errorWidget: (context, url, error) => Image.asset(
+                    fit: BoxFit.cover,
+                    "assets/images/img.png",
+                  ),
+                )
+
+                // Image.asset('assets/images/img.png'),
+
+                ),
             Text(
               title ?? "title",
               textAlign: TextAlign.center,
@@ -158,7 +199,7 @@ class RecommendedItems extends StatelessWidget {
 
   /// big item
   Widget _bigItemCard(BuildContext context,
-      {String? dp, String? title, int? index}) {
+      {String? imgUrl, String? title, int? index}) {
     final screenSize = MediaQuery.of(context).size;
     final screenWidth = screenSize.width;
     // final screenHeight = screenSize.height;
@@ -182,22 +223,34 @@ class RecommendedItems extends StatelessWidget {
           children: [
             Stack(children: [
               Container(
-                clipBehavior: Clip.hardEdge,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(5),
-                  // border: Border.all(
-                  //   color: const Color(0xFFFFF4DB),
-                  //   width: 1,
-                  // )
-                  //
-                ),
-                // height: double.infinity,
-                // height: 200,
-                // width: 105,
-                child: Image.asset(
-                  'assets/images/big$index.png',
-                ),
-              ),
+                  clipBehavior: Clip.hardEdge,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(5),
+                    // border: Border.all(
+                    //   color: const Color(0xFFFFF4DB),
+                    //   width: 1,
+                    // )
+                    //
+                  ),
+                  // height: double.infinity,
+                  // height: 200,
+                  // width: 105,
+                  child: SizedBox(
+                    height: 120,
+                    child: CachedNetworkImage(
+                      imageUrl: imgUrl!,
+                      fit: BoxFit.cover,
+                      errorWidget: (context, url, error) => Image.asset(
+                        fit: BoxFit.cover,
+                        "assets/images/img.png",
+                      ),
+                    ),
+                  )
+
+                  // Image.asset(
+                  //   'assets/images/big$index.png',
+                  // ),
+                  ),
               Positioned(
                   top: 6,
                   left: 6,

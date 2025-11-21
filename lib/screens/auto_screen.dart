@@ -18,10 +18,10 @@ class AutoScreen extends StatelessWidget {
         stream: auth.authStateChange,
         builder: (context, snapshot) {
           Widget widget;
-          // if (snapshot.connectionState == ConnectionState.waiting) {
-          //   log('Appp.waiting');
-          //   widget = const LoadingScreen();
-          // } else
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            log('Appp.waiting');
+            widget = const LoadingScreen();
+          } else
             if (snapshot.hasData) {
             log('Appp.has data');
             widget = const NavScreen();

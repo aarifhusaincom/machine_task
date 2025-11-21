@@ -19,9 +19,9 @@ class ProductModel {
     return ProductModel(
       id: id,
       name: map['name'] ?? '',
-      price: (map['price'] ?? 0).toDouble(),
-      rating: (map['rating'] ?? 0).toDouble(),
-      reviews: map['reviews'] ?? 0,
+      price: map['price'] ?? '',
+      rating: map['rating'] ?? '0',
+      reviews: map['reviews'] ?? '0',
       imageUrl: map['imageUrl'] ?? '',
     );
   }

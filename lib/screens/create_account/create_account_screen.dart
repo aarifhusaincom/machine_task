@@ -5,6 +5,8 @@ import 'package:luxeloft/screens/login/login_screen.dart';
 import 'package:luxeloft/services/auth_service.dart';
 import 'package:provider/provider.dart';
 
+import '../auto_screen.dart';
+
 class CreateAccountScreen extends StatelessWidget {
   const CreateAccountScreen({super.key});
 
@@ -14,6 +16,7 @@ class CreateAccountScreen extends StatelessWidget {
     final phoneController = TextEditingController();
     final emailController = TextEditingController();
     final passwordController = TextEditingController();
+    final repasswordController = TextEditingController();
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -95,7 +98,7 @@ class CreateAccountScreen extends StatelessWidget {
 
                     /// Repeat Password
                     _buildInputField(
-                      controller: passwordController,
+                      controller: repasswordController,
                       hint: "Repeat Password",
                       icon: Icons.lock_outline,
                       obscure: true,
@@ -209,7 +212,16 @@ class CreateAccountScreen extends StatelessWidget {
                           SvgPicture.asset('assets/icons/Apple Button.svg'),
                           InkWell(onTap: () async {
                             try {
+                              // UserCredential gUser =
                               await auth.signInWithGoogle();
+                              if(auth.currentUser != null){
+                                Navigator.pushAndRemoveUntil(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => const AutoScreen()),
+                                      (Route<dynamic> route) => false,
+                                );
+                              }
+
                             } catch (e) {
                               ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString())));
                             }

@@ -1,11 +1,14 @@
 import 'dart:developer';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:luxeloft/screens/auto_screen.dart';
 import 'package:provider/provider.dart';
 
 import '../../services/auth_service.dart';
+import '../nav_screen/nav_screen.dart';
 
 class LoginScreen extends StatelessWidget {
   LoginScreen({super.key});
@@ -15,7 +18,16 @@ class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final auth = Provider.of<AuthService>(context);
-    return Scaffold(
+    // if(auth.currentUser != null){
+    //   Navigator.pushAndRemoveUntil(
+    //     context,
+    //     MaterialPageRoute(builder: (context) => const NavScreen()),
+    //         (Route<dynamic> route) => false,
+    //   );
+    //   return Scaffold();
+    //
+    // }else{
+      return Scaffold(
       body: SafeArea(
         child: SizedBox.expand(
           child: SingleChildScrollView(
@@ -103,57 +115,57 @@ class LoginScreen extends StatelessWidget {
                       auth.isLoading
                           ? const CircularProgressIndicator()
                           : ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(50),
-                                ),
-                              ),
-                              onPressed: () async {
-                                // if (phoneController.text.isNotEmpty) {
-                                //   try {
-                                //      context.read<AuthService>().verifyPhoneNumber(
-                                //        phone: "+91${phoneController.text.toString()}",
-                                //      );
-                                //     Navigator.pushNamed(context, '/otp');
-                                //   } catch (e) {
-                                //     log(e.toString());
-                                //   }
-                                // } else {
-                                //   ScaffoldMessenger.of(context).showSnackBar(
-                                //     SnackBar(content: Text("Please enter phone number")),
-                                //   );
-                                // }
+                        style: ElevatedButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(50),
+                          ),
+                        ),
+                        onPressed: () async {
+                          // if (phoneController.text.isNotEmpty) {
+                          //   try {
+                          //      context.read<AuthService>().verifyPhoneNumber(
+                          //        phone: "+91${phoneController.text.toString()}",
+                          //      );
+                          //     Navigator.pushNamed(context, '/otp');
+                          //   } catch (e) {
+                          //     log(e.toString());
+                          //   }
+                          // } else {
+                          //   ScaffoldMessenger.of(context).showSnackBar(
+                          //     SnackBar(content: Text("Please enter phone number")),
+                          //   );
+                          // }
 
-                                if (phoneCtrl.text.isNotEmpty) {
-                                  try {
-                                    final msg =
-                                        await auth.login(phoneCtrl.text.trim());
+                          if (phoneCtrl.text.isNotEmpty) {
+                            try {
+                              final msg =
+                              await auth.login(phoneCtrl.text.trim());
 
-                                    if (msg != null) {
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(
-                                              SnackBar(content: Text(msg)));
-                                    } else {
-                                      Navigator.pushNamed(
-                                          context, "/OtpScreen");
-                                    }
-                                  } catch (e) {
-                                    log(e.toString());
-                                  }
-                                } else {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                        content:
-                                            Text("Please enter phone number")),
-                                  );
-                                }
-                              },
-                              child: Text(
-                                "Get OTP",
-                                style: GoogleFonts.poppins(
-                                    fontSize: 18, fontWeight: FontWeight.w700),
-                              ),
-                            ),
+                              if (msg != null) {
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(
+                                    SnackBar(content: Text(msg)));
+                              } else {
+                                Navigator.pushNamed(
+                                    context, "/OtpScreen");
+                              }
+                            } catch (e) {
+                              log(e.toString());
+                            }
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                  content:
+                                  Text("Please enter phone number")),
+                            );
+                          }
+                        },
+                        child: Text(
+                          "Get OTP",
+                          style: GoogleFonts.poppins(
+                              fontSize: 18, fontWeight: FontWeight.w700),
+                        ),
+                      ),
                     ],
                   ),
                   const SizedBox(
@@ -176,7 +188,16 @@ class LoginScreen extends StatelessWidget {
                         children: [
                           InkWell(onTap: () async {
                             try {
-                              await auth.signInWithGoogle();
+                           // UserCredential gUser =
+                           await auth.signInWithGoogle();
+                           if(auth.currentUser != null){
+                             Navigator.pushAndRemoveUntil(
+                               context,
+                               MaterialPageRoute(builder: (context) => const AutoScreen()),
+                                   (Route<dynamic> route) => false,
+                             );
+                           }
+
                             } catch (e) {
                               ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString())));
                             }
@@ -228,5 +249,7 @@ class LoginScreen extends StatelessWidget {
         ),
       ),
     );
+  // }
+
   }
 }

@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 
 import 'package:google_fonts/google_fonts.dart';
+import 'package:pinput/pinput.dart';
 import 'package:provider/provider.dart';
 
 import '../../services/auth_service.dart';
@@ -56,6 +57,7 @@ class OtpScreen extends StatelessWidget {
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
+                    spacing: 20,
                     children: [
                       // TextField(
                       //   // controller: phoneController,
@@ -91,12 +93,40 @@ class OtpScreen extends StatelessWidget {
                       //     ),
                       //   ),
                       // ),
-                      TextField(
-                        controller: otpCtrl,
-                        keyboardType: TextInputType.number,
-                        decoration:
-                            const InputDecoration(labelText: "Enter OTP"),
-                      ),
+                      Pinput(controller: otpCtrl,keyboardType: TextInputType.number,length: 6, onCompleted: (pin) async {
+
+                          if (otpCtrl.text.isNotEmpty) {
+                            try {
+                              final String? msg =
+                                  await auth.verifyOTP(pin);
+
+                              // ScaffoldMessenger.of(context)
+                              //     .showSnackBar(SnackBar(content: Text(msg as String)));
+
+                              if (msg != null) {
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(SnackBar(content: Text(msg)));
+                              } else {
+                                Navigator.pushReplacementNamed(
+                                    context, "/AutoScreen");
+                              }
+                            } catch (e) {
+                              log(e.toString());
+                            }
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                  content: Text("Please enter phone number")),
+                            );
+                          }
+
+                      },),
+                      // TextField(
+                      //   controller: otpCtrl,
+                      //   keyboardType: TextInputType.number,
+                      //   decoration:
+                      //       const InputDecoration(labelText: "Enter OTP"),
+                      // ),
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           shape: RoundedRectangleBorder(
